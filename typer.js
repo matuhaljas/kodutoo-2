@@ -3,7 +3,7 @@ console.log("Fail õigesti ühendatud");
 class Typer{
     constructor(){
         this.name = "";
-        this.wordsInGame = 5;
+        this.wordsInGame = 1;
         this.startingWordLength = 5;
         this.startTime = 0;
         this.endTime = 0;
@@ -128,6 +128,7 @@ class Typer{
         }
     }
 
+    //https://developer.mozilla.org/en-US/docs/Web/API/AudioContext
     //Helide kasutamine
     playTone(frequency, duration = 0.12, volume = 0.18){
         if(!this.audioContext){
@@ -295,38 +296,27 @@ class Typer{
         const imageContainer = document.getElementById("resultImage");
         const speed = this.wpm;
         const badge = this.makeSpeedBadge(speed);
-        imageContainer.innerHTML = `<img src="${badge.src}" alt="${badge.alt}">`;
+        document.getElementById("speedText").textContent = badge.text;
+        imageContainer.innerHTML = `<img style="max-width: 200px" src="${badge.src}" alt="${badge.alt}">`;
     }
 
-    // TODO: lisada pilt värvi asemel
-
     makeSpeedBadge(speed){
-        let label = "Uus algus";
-        let color = "#334155";
-        if(speed < 30){
-            label = "Aeglane";
-            color = "#f97316";
-        } else if(speed < 45){
-            label = "Tavapärane";
-            color = "#fb923c";
-        } else if(speed < 60){
-            label = "Päris hea";
-            color = "#38bdf8";
-        } else if(speed < 80){
-            label = "Imeline";
-            color = "#7c3aed";
-        } else {
-            label = "Tippkiirus";
-            color = "#22c55e";
+        // Turtle-slow kiirus (aeglane): alla 20 WPM
+        if(speed < 20){
+            return {
+                text: "Aeglane",
+                src: "turtle-slow.jpg",
+                alt: "Aeglane kilpkonn"
+            };
         }
-
-        const svg = `<svg xmlns='http://www.w3.org/2000/svg' width='320' height='180'>
-            <rect width='320' height='180' rx='24' fill='${color}' />
-            <text x='50%' y='48%' dominant-baseline='middle' text-anchor='middle' font-family='Rubik, sans-serif' font-size='28' fill='#ffffff'>${label}</text>
-            <text x='50%' y='72%' dominant-baseline='middle' text-anchor='middle' font-family='Rubik, sans-serif' font-size='18' fill='#ffffff'>${speed} WPM</text>
-        </svg>`;
-
-        return { src: `data:image/svg+xml,${encodeURIComponent(svg)}`, alt: `${label} pilt` };
+        // Cheetah-speed kiirus (kiire): 20+ WPM
+        else {
+            return {
+                text: "Oled kiirus",
+                src: "cheetah-speed.jpg",
+                alt: "Kiire gepard"
+            };
+        }
     }
 
     restartGame(){
